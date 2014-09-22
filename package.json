@@ -11,6 +11,10 @@
     "openstreetmap",
     "map"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/kosmtik/kosmtik-fetch-remote.git"
+  },
   "author": "Yohan Boniface",
   "license": "WTFPL",
   "dependencies": {
