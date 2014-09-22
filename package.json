@@ -15,5 +15,8 @@
   "license": "WTFPL",
   "dependencies": {
     "unzip": "^0.1.11"
+  },
+  "peerDependencies": {
+    "kosmtik": "~0.0.1"
   }
 }

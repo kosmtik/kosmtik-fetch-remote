@@ -8,7 +8,7 @@ var log = function () {
 };
 
 var FetchRemote = function (config) {
-    config.commands.project.option('force-fetch-remote', {help: 'Refetch overpass data even if local file exists [Default: false]', flag: true});
+    config.commands.serve.option('force-fetch-remote', {help: 'Refetch overpass data even if local file exists [Default: false]', flag: true});
     config.beforeState('project:loaded', this.patchMML);
 };
 
