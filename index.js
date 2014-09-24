@@ -18,17 +18,20 @@ FetchRemote.prototype.patchMML = function (e) {
         length = e.project.mml.Layer.length,
         force = this.config.parsed_opts['force-fetch-remote'],
         incr = function () {
-            if (processed === 0) e.start();
             processed++;
         },
         decr = function () {
             processed--;
             if (processed === 0) {
-                log('Done.');
-                e.end();
+                done();
             }
+        },
+        done = function () {
+            log('Done.');
+            e.continue();
         };
     var download = function (layer) {
+        incr();
         var uri = layer.Datasource.file,
             ext = path.extname(uri),
             basename = path.basename(uri),
@@ -68,14 +71,15 @@ FetchRemote.prototype.patchMML = function (e) {
             });
         }).on('error', onError);
     };
+    incr();
     for (var i = 0; i < e.project.mml.Layer.length; i++) {
         layer = e.project.mml.Layer[i];
         if (layer.Datasource && layer.Datasource.file && layer.Datasource.file.indexOf('http://') === 0) {  // https
-            incr();
             log('Processing file', layer.Datasource.file);
             download(layer);
         }
     }
+    decr();
 };
 
 exports.Plugin = FetchRemote;
