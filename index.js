@@ -46,7 +46,6 @@ FetchRemote.prototype.patchMML = function (e) {
             log('File already exists and not force mode', dest, 'SKIPPING');
             return decr();
         }
-        var file = fs.createWriteStream(dest);
         var onDownloaded = function () {
             fs.createReadStream(dest)
               .pipe(unzip.Parse())
@@ -65,6 +64,7 @@ FetchRemote.prototype.patchMML = function (e) {
             decr();
         };
         http.get(uri, function onResponse (resp) {
+            var file = fs.createWriteStream(dest);
             resp.pipe(file);
             file.on('finish', function onFinish() {
                 file.close(onDownloaded);
