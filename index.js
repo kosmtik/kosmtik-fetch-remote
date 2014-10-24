@@ -1,6 +1,5 @@
 var fs = require('fs'),
     path = require('path'),
-    http = require('http'),
     unzip = require('unzip');
 
 var log = function () {
@@ -17,6 +16,7 @@ FetchRemote.prototype.patchMML = function (e) {
     var processed = 0, layer,
         length = e.project.mml.Layer.length,
         force = this.config.parsed_opts['force-fetch-remote'],
+        self = this,
         incr = function () {
             processed++;
         },
@@ -63,13 +63,15 @@ FetchRemote.prototype.patchMML = function (e) {
             fs.unlink(dest);
             decr();
         };
-        http.get(uri, function onResponse (resp) {
+        var onResponse = function (resp) {
+            if (resp.statusCode >= 400) return onError(new Error('Bad status code: ' + resp.statusCode));
             var file = fs.createWriteStream(dest);
             resp.pipe(file);
             file.on('finish', function onFinish() {
                 file.close(onDownloaded);
             });
-        }).on('error', onError);
+        };
+        self.config.helpers.request({uri: uri}).on('error', onError).on('response', onResponse);
     };
     incr();
     for (var i = 0; i < e.project.mml.Layer.length; i++) {
