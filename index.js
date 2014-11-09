@@ -12,9 +12,8 @@ var FetchRemote = function (config) {
 };
 
 FetchRemote.prototype.patchMML = function (e) {
-    if (!e.project.mml || !e.project.mml.Layer) return;
+    if (!e.project.mml || !e.project.mml.Layer) return e.continue();
     var processed = 0, layer,
-        length = e.project.mml.Layer.length,
         force = this.config.parsed_opts['force-fetch-remote'],
         self = this,
         incr = function () {
@@ -33,7 +32,6 @@ FetchRemote.prototype.patchMML = function (e) {
     var download = function (layer) {
         incr();
         var uri = layer.Datasource.file,
-            ext = path.extname(uri),
             basename = path.basename(uri),
             destDir = path.join(e.project.dataDir, layer.id),
             dest = path.join(destDir, basename);
@@ -53,7 +51,7 @@ FetchRemote.prototype.patchMML = function (e) {
                 var fileName = entry.path;
                 log(fileName);
                 if (entry.type === 'Directory') return entry.autodrain();
-                if (layer.Datasource.type === "shape") fileName = layer.id + path.extname(fileName);
+                if (layer.Datasource.type === 'shape') fileName = layer.id + path.extname(fileName);
                 entry.pipe(fs.createWriteStream(path.join(destDir, fileName)));
               }).on('close', decr);
         };
