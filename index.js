@@ -1,6 +1,6 @@
 var fs = require('fs'),
     path = require('path'),
-    unzip = require('unzip');
+    unzip = require('unzipper');
 
 var log = function () {
     console.warn.apply(console, Array.prototype.concat.apply(['[Fetch Remote]'], arguments));

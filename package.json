@@ -1,6 +1,6 @@
 {
   "name": "kosmtik-fetch-remote",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "Kosmtik plugin to fetch remote layer data",
   "main": "index.js",
   "scripts": {
@@ -18,7 +18,7 @@
   "author": "Yohan Boniface",
   "license": "WTFPL",
   "dependencies": {
-    "unzip": "^0.1.11"
+    "unzipper": "^0.10.10"
   },
   "kosmtik": "~0.0.6"
 }
