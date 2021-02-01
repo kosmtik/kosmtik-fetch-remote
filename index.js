@@ -75,7 +75,7 @@ class FetchRemote {
         incr();
         for (var i = 0; i < e.project.mml.Layer.length; i++) {
             layer = e.project.mml.Layer[i];
-            if (layer.Datasource && layer.Datasource.file && layer.Datasource.file.indexOf('http://') === 0) {  // https
+            if (layer.Datasource && layer.Datasource.file && layer.Datasource.file.search('^https?://') === 0) {
                 log('Processing file', layer.Datasource.file);
                 download(layer);
             }
