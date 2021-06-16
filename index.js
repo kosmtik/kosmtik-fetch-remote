@@ -37,20 +37,25 @@ class Fetch {
     }
 
     onResponse (resp) {
-        if (resp.statusCode >= 400) return onError(new Error('Bad status code: ' + resp.statusCode));
+        if (resp.statusCode >= 400) return this.onError(new Error('Bad status code: ' + resp.statusCode));
         var file = fs.createWriteStream(this.dest);
         resp.pipe(file);
-        file.on('finish', function onFinish() {
-            file.close(this.onDownloaded);
+        file.on('finish', () => {
+            file.close();
+            this.onDownloaded();
         });
     }
 
 
     download (force) {
-        if(fs.existsSync(this.dest) && !force) {
-            log('File already exists and not force mode', this.dest, 'SKIPPING');
-            return this.callback();
+        if(fs.existsSync(this.dest)) {
+            if (!force) {
+                log('File already exists and not force mode', this.dest, 'SKIPPING');
+                return this.callback();
+            }
+            fs.unlinkSync(this.dest);
         }
+        log("Downloading " + this.uri + " to " + this.dest);
         this.config.helpers.request({uri: this.uri}).on('error', this.onError.bind(this)).on('response', this.onResponse.bind(this));
     }
 
@@ -64,9 +69,10 @@ class FetchShp extends Fetch {
     }
 
     onDownloaded () {
+        log("Processing " + this.dest);
         fs.createReadStream(this.dest)
         .pipe(unzip.Parse())
-        .on('entry', function (entry) {
+        .on('entry', (entry) => {
             var fileName = entry.path;
             log(fileName);
             if (entry.type === 'Directory') return entry.autodrain();
