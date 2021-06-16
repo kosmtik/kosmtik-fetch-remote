@@ -33,8 +33,7 @@ class Fetch {
     onError (err) {
         log('Error while fetching', this.uri);
         log(err.message);
-        fs.unlink(this.dest);
-        this.callback();
+        fs.unlink(this.dest, this.callback);
     }
 
     onResponse (resp) {
